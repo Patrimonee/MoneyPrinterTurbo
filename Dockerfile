@@ -22,9 +22,8 @@ ARG PIP_USE_OFFICIAL=0
 RUN set -u; \
     write_debian_sources() { \
         main_url="$1"; \
-        security_url="$2"; \
-        printf 'deb %s bullseye main\ndeb %s bullseye-updates main\ndeb %s bullseye-security main\n' \
-            "$main_url" "$main_url" "$security_url" > /etc/apt/sources.list; \
+        printf 'deb %s bullseye main\ndeb %s bullseye-updates main\n' \
+            "$main_url" "$main_url" > /etc/apt/sources.list; \
         rm -rf /var/lib/apt/lists/*; \
     }; \
     install_system_dependencies() { \
@@ -49,18 +48,15 @@ RUN set -u; \
     }; \
     if [ "$DOCKER_BUILD_MIRROR" = "china" ]; then \
         write_debian_sources \
-            "https://mirrors.aliyun.com/debian" \
-            "https://archive.debian.org/debian-security"; \
+            "https://mirrors.aliyun.com/debian"; \
         if ! retry_system_dependencies; then \
             echo "Aliyun mirror failed, switching to Tsinghua mirror" >&2; \
             write_debian_sources \
-                "https://mirrors.tuna.tsinghua.edu.cn/debian" \
-                "https://archive.debian.org/debian-security"; \
+                "https://mirrors.tuna.tsinghua.edu.cn/debian"; \
             if ! install_system_dependencies; then \
                 echo "Tsinghua mirror failed, switching to default Debian mirror" >&2; \
                 write_debian_sources \
-                    "https://deb.debian.org/debian" \
-                    "https://archive.debian.org/debian-security"; \
+                    "https://deb.debian.org/debian"; \
                 if ! install_system_dependencies; then \
                     echo "Failed to install system dependencies from all configured mirrors" >&2; \
                     exit 1; \
@@ -70,8 +66,7 @@ RUN set -u; \
     else \
         echo "Using default Debian mirrors"; \
         write_debian_sources \
-            "https://deb.debian.org/debian" \
-            "https://archive.debian.org/debian-security"; \
+            "https://deb.debian.org/debian"; \
         if ! retry_system_dependencies; then \
             echo "Failed to install system dependencies from the default Debian mirror" >&2; \
             exit 1; \
