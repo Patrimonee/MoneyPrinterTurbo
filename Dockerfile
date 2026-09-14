@@ -50,17 +50,17 @@ RUN set -u; \
     if [ "$DOCKER_BUILD_MIRROR" = "china" ]; then \
         write_debian_sources \
             "https://mirrors.aliyun.com/debian" \
-            "https://mirrors.aliyun.com/debian-security"; \
+            "https://archive.debian.org/debian-security"; \
         if ! retry_system_dependencies; then \
             echo "Aliyun mirror failed, switching to Tsinghua mirror" >&2; \
             write_debian_sources \
                 "https://mirrors.tuna.tsinghua.edu.cn/debian" \
-                "https://mirrors.tuna.tsinghua.edu.cn/debian-security"; \
+                "https://archive.debian.org/debian-security"; \
             if ! install_system_dependencies; then \
                 echo "Tsinghua mirror failed, switching to default Debian mirror" >&2; \
                 write_debian_sources \
                     "https://deb.debian.org/debian" \
-                    "https://deb.debian.org/debian-security"; \
+                    "https://archive.debian.org/debian-security"; \
                 if ! install_system_dependencies; then \
                     echo "Failed to install system dependencies from all configured mirrors" >&2; \
                     exit 1; \
@@ -71,7 +71,7 @@ RUN set -u; \
         echo "Using default Debian mirrors"; \
         write_debian_sources \
             "https://deb.debian.org/debian" \
-            "https://deb.debian.org/debian-security"; \
+            "https://archive.debian.org/debian-security"; \
         if ! retry_system_dependencies; then \
             echo "Failed to install system dependencies from the default Debian mirror" >&2; \
             exit 1; \
