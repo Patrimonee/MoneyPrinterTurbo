@@ -22,13 +22,13 @@ ARG PIP_USE_OFFICIAL=0
 RUN set -u; \
     write_debian_sources() { \
         main_url="$1"; \
-        printf 'deb %s bullseye main\ndeb %s bullseye-updates main\ndeb https://deb.debian.org/debian-security bullseye-security main\n' \
+        printf 'deb %s bullseye main\ndeb %s bullseye-updates main\n' \
             "$main_url" "$main_url" > /etc/apt/sources.list; \
         rm -rf /var/lib/apt/lists/*; \
     }; \
     install_system_dependencies() { \
         apt-get update && \
-        apt-get install -y --no-install-recommends git ffmpeg; \
+        apt-get install -y --no-install-recommends --allow-downgrades git ffmpeg perl-base=5.32.1-4+deb11u3; \
     }; \
     retry_system_dependencies() { \
         attempt=1; \
